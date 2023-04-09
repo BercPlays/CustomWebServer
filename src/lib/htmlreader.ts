@@ -8,6 +8,6 @@ export async function getindex(){
         return data
     } catch (error) {
         console.log(decolib.message_formated(decolib.prefixes.Program,`Error getting index.html ❌. ${error}`));
-        return "Error getting index.html ❌"
+        return "Error getting index.html ❌. Check console for errors"
     }
 }
