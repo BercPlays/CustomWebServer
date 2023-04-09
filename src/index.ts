@@ -20,7 +20,6 @@ function worker_send(id:any,message:string){
 
 
 async function main() {
-  console.log(htmlreader.getindex());
   if (cluster.isPrimary) {
     const numWorkers = ConfigFile.config.allocated_threads //os.cpus().length;
     console_send(decolib.prefixes.Program,`starting webserver ✅`)
@@ -42,7 +41,7 @@ async function main() {
           const index = await htmlreader.getindex();
           res.send(index);
         } catch (error) {
-          console.error(error);
+          console_send(decolib.prefixes.Program,`Server Error ❌ ${error}`)
           res.status(500).send('Internal Server Error');
         }
       } else {
