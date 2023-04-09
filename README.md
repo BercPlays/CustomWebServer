@@ -14,3 +14,8 @@ HTTPS
   https://github.com/BercPlays/CustomWebserver.git
 ```
 or just download it i guess...
+
+# Dependencies ⚠
+
+- [Express.js](https://expressjs.com/)
+`npm install express --save`
