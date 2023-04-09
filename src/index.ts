@@ -1,5 +1,6 @@
 import * as ConfigFile from "./config"
 import * as decolib from "./lib/decoration"
+import * as htmlreader from "./lib/htmlreader"
 
 import cluster from 'cluster';
 import os from 'os';
@@ -18,35 +19,48 @@ function worker_send(id:any,message:string){
 }
 
 
-if (cluster.isPrimary) {
+async function main() {
+  console.log(htmlreader.getindex());
+  if (cluster.isPrimary) {
     const numWorkers = ConfigFile.config.allocated_threads //os.cpus().length;
     console_send(decolib.prefixes.Program,`starting webserver ✅`)
     console_send(decolib.prefixes.Program,`starting with ${numWorkers} ${decolib.prefixes.Worker_Plural}`)
   
     Array.from({ length: numWorkers }, () => cluster.fork());
   
-    cluster.on('exit', (worker, code, signal) => {
-      worker_send(worker.process.pid,`exited with code ${code}`)
+    cluster.on('exit', async (worker, code, signal) => {
+      await worker_send(worker.process.pid,`exited with code ${code}`)
 
       console.log(`Starting a new worker`);
-      cluster.fork();
+      await cluster.fork();
     });
+
   } else {
-    app.get('/', (req, res) => {
+    app.get('/', async (req, res) => {
       if (cluster.worker) {
-        //res.send(`Hello bello from worker ${cluster.worker.id}`);
-        res.send(`<h3>TEST<h3>`)
+        try {
+          const index = await htmlreader.getindex();
+          res.send(index);
+        } catch (error) {
+          console.error(error);
+          res.status(500).send('Internal Server Error');
+        }
       } else {
         res.send('Hello from a worker');
       }
     });
   
-    app.listen(port, () => {
+    await app.listen(port, async () => {
       if (cluster.worker) {
-        worker_send(cluster.worker.id,`listening on port ${port} 🔌`)
+        await worker_send(cluster.worker.id,`listening on port ${port} 🔌`)
       } else {
         console.log(`Listening on port ${port}`);
       }
     });
-    
   }
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
