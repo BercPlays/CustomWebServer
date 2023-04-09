@@ -1,0 +1,16 @@
+# CustomWebServer 🧱
+
+This project is a webserver template.
+
+Feel free to clone this repository! 
+
+GitHub CLI
+```bash
+  gh repo clone BercPlays/CustomWebserver
+```
+
+HTTPS
+```bash
+  https://github.com/BercPlays/CustomWebserver.git
+```
+or just download it i guess...
