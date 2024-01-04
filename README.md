@@ -6,7 +6,7 @@ Feel free to clone this repository!
 
 GitHub CLI
 ```bash
-  gh repo clone BercPlays/CustomWebserver
+  git repo clone BercPlays/CustomWebserver
 ```
 
 HTTPS
